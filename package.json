@@ -2,8 +2,10 @@
   "name": "techsupport-api",
   "version": "1.0.0",
   "description": "Sistema  para el registro de incidencias reportadas por los empleados.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +21,7 @@
   },
   "homepage": "https://github.com/Kuroo-hub/techsupport-api#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
   }
 }
