@@ -1,0 +1,24 @@
+{
+  "name": "techsupport-api",
+  "version": "1.0.0",
+  "description": "Sistema  para el registro de incidencias reportadas por los empleados.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kuroo-hub/techsupport-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Kuroo-hub/techsupport-api/issues"
+  },
+  "homepage": "https://github.com/Kuroo-hub/techsupport-api#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
