@@ -23,7 +23,7 @@ function registrarIncidencia(req, res)
         // Validacion y Normalizacion de la prioridad
         if(!validarPrioridad(prioridad))
             {
-                res.status(400).json({error: "La prioirdad solo puede ser Alta, Media o Baja."})
+                return res.status(400).json({error: "La prioridad solo puede ser Alta, Media o Baja."})
             }
 
         // Registramos el nuevo objeto y le agregamos el id junto con el estado.
@@ -68,8 +68,35 @@ function listarIncidencias(req, res)
     }
 }
 
+function buscarIncidencias(req, res)
+{
+    try
+    {
+        //obtener el id q venga de la url y parseInt para convertirlo a numero
+        const id = parseInt(req.params.id);
+
+        //find() para buscar la incidencia uno por uno dentro del arreglo
+        const incidencia = incidencias.find(incidencia => incidencia.id === id);
+
+        if(!incidencia)
+            {
+                return res.status(404).json({
+                error: "No se encontro la incidencia"
+            });
+            }
+
+        return res.status(200).json(incidencia);
+    } catch(error)
+    {
+        res.status(500).json({
+        error: "Ocurrio un error al buscar la incidencia"
+    });
+    }
+}
+
 module.exports =
 {
     registrarIncidencia,
-    listarIncidencias
+    listarIncidencias,
+    buscarIncidencias
 };
