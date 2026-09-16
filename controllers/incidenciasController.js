@@ -151,8 +151,35 @@ function eliminarIncidencia(req, res) {
         res.status(500).json({
             error: "Ocurrio un error al eliminar la incidencia"
         });
-        }
     }
+}
+function obtenerEstadisticas(req, res) {
+    try {
+        const estadisticas = incidencias.reduce((acc, incidencia) => {
+            acc.totalIncidencias++;
+
+            // Mapeo dinamico de los estados almacenados
+            if (incidencia.estado === "pendiente") acc.pendientes++;
+            else if (incidencia.estado === "en proceso") acc.enProceso++;
+            else if (incidencia.estado === "resuelta") acc.resueltas++;
+            else if (incidencia.estado === "cancelada") acc.canceladas++;
+
+            return acc;
+        }, {
+            totalIncidencias: 0,
+            pendientes: 0,
+            enProceso: 0,
+            resueltas: 0,
+            canceladas: 0
+        });
+
+        return res.status(200).json(estadisticas);
+    } catch (error) {
+        return res.status(500).json({
+            error: "Ocurrió un error al obtener las estadísticas"
+        });
+    }
+}
 
 module.exports = 
 { 
