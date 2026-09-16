@@ -1,4 +1,4 @@
-// Configuraxion generañ
+// Configuraxion general
 const express = require('express');
 const incidenciasRoutes = require('./routes/incidencias');
 
