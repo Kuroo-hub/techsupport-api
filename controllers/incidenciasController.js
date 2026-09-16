@@ -127,7 +127,8 @@ function cambiarEstadoIncidencia(req, res) {
             error: "Ocurrio un error al cambiar el estado de la incidencia"
         });
     }
-    function eliminarIncidencia(req, res) {
+}
+function eliminarIncidencia(req, res) {
     try {
         const id = parseInt(req.params.id);
 
@@ -152,7 +153,6 @@ function cambiarEstadoIncidencia(req, res) {
         });
         }
     }
-}
 
 module.exports = 
 { 
