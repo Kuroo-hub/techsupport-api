@@ -86,6 +86,8 @@ function cambiarEstadoIncidencia(req, res) {
         const id = parseInt(req.params.id);
         const { estado } = req.body;
 
+        const incidencia = incidencias.find(incidencia => incidencia.id === id);
+
         if (!incidencia) {
             return res.status(404).json({
                 error: "No se encontro la incidencia"
@@ -101,10 +103,10 @@ function cambiarEstadoIncidencia(req, res) {
             case "pendiente":
                 incidencia.estado = "pendiente";
                 break;
-            case "procesado":
+            case "en proceso":
                 incidencia.estado = "en proceso";
                 break;
-            case "finalizado":
+            case "resuelta":
                 incidencia.estado = "resuelta";
                 break;
             case "cancelada":
