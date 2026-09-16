@@ -127,6 +127,31 @@ function cambiarEstadoIncidencia(req, res) {
             error: "Ocurrio un error al cambiar el estado de la incidencia"
         });
     }
+    function eliminarIncidencia(req, res) {
+    try {
+        const id = parseInt(req.params.id);
+
+        const indice = incidencias.findIndex(incidencia => incidencia.id === id);
+
+        if (indice === -1) {
+            return res.status(404).json({
+                error: "No se encontro la incidencia"
+            });
+        }
+
+        const incidenciaEliminada = incidencias.splice(indice, 1);
+
+        return res.status(200).json({
+            mensaje: "Se elimino correctamente la incidencia",
+            incidencia: incidenciaEliminada[0]
+        });
+        }
+    catch (error) {
+        res.status(500).json({
+            error: "Ocurrio un error al eliminar la incidencia"
+        });
+        }
+    }
 }
 
 module.exports =
