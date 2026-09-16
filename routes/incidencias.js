@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 //Importar funciones
-const { registrarIncidencia, listarIncidencias, buscarIncidencias} = require("../controllers/incidenciasController");
+const { registrarIncidencia, listarIncidencias, buscarIncidencias, cambiarEstadoIncidencia } = require("../controllers/incidenciasController");
 
 // funcion registrar incidencias
 router.post("/", registrarIncidencia);
@@ -12,5 +12,8 @@ router.get("/", listarIncidencias);
 
 //Funcion buscar incidencias dado su id
 router.get("/:id", buscarIncidencias);
+
+//Funcion cambiar estado de una incidencia
+router.put("/:id/estado", cambiarEstadoIncidencia);
 
 module.exports = router;

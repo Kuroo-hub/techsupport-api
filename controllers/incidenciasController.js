@@ -1,33 +1,28 @@
 const incidencias = require("../data/incidencias");
-const {validarPrioridad} = require("../utils/helpers");
+const { validarPrioridad } = require("../utils/helpers");
 
 // Registro de las incidencias
-function registrarIncidencia(req, res)
-{
-    try
-    {
+function registrarIncidencia(req, res) {
+    try {
         // Esta parte de aca, para que no se confundan es como crear las variables una por una, este "metodo" se llama destructuring
-        const {empleado, area, descripcion, prioridad} = req.body;
+        const { empleado, area, descripcion, prioridad } = req.body;
 
         // Validacion de los campos
-        if(!empleado || !area || !descripcion || !prioridad)
-            {
-                return res.status(400).json({error: "Porfavor llenar todos los campos."});
-            }
-        
-        if(empleado.trim() === "" || area.trim() === "" || descripcion.trim() === "" || prioridad.trim() === "")
-            {
-                return res.status(400).json({error: "Porfavor llenar todos los campos."});
-            }
-        
+        if (!empleado || !area || !descripcion || !prioridad) {
+            return res.status(400).json({ error: "Porfavor llenar todos los campos." });
+        }
+
+        if (empleado.trim() === "" || area.trim() === "" || descripcion.trim() === "" || prioridad.trim() === "") {
+            return res.status(400).json({ error: "Porfavor llenar todos los campos." });
+        }
+
         // Validacion y Normalizacion de la prioridad
-        if(!validarPrioridad(prioridad))
-            {
-                return res.status(400).json({error: "La prioridad solo puede ser Alta, Media o Baja."})
-            }
+        if (!validarPrioridad(prioridad)) {
+            return res.status(400).json({ error: "La prioridad solo puede ser Alta, Media o Baja." })
+        }
 
         // Registramos el nuevo objeto y le agregamos el id junto con el estado.
-        const nuevaIncidencia = 
+        const nuevaIncidencia =
         {
             id: incidencias.length + 1,
             empleado: empleado.trim(),
@@ -44,53 +39,91 @@ function registrarIncidencia(req, res)
             mensaje: "Se registro correctamente la incidencia",
             incidencia: nuevaIncidencia
         })
-    }catch(error)
-    {
-        res.status(500).json({error: "Error al registrar la incidencia."});
+    } catch (error) {
+        res.status(500).json({ error: "Error al registrar la incidencia." });
     }
 }
 
-function listarIncidencias(req, res)
-{
-    try
-    {
-        if(incidencias.length === 0)
-            {
-                return res.status(200).json({mensaje: "No hay incidencias registradas"});
-            }
+function listarIncidencias(req, res) {
+    try {
+        if (incidencias.length === 0) {
+            return res.status(200).json({ mensaje: "No hay incidencias registradas" });
+        }
         return res.status(200).json(incidencias);
-    }catch(error)
-    {
+    } catch (error) {
         res.status(500).json
-        ({
-            error: "Ocurrio un error al mostrar la lista"
-        });
+            ({
+                error: "Ocurrio un error al mostrar la lista"
+            });
     }
 }
 
-function buscarIncidencias(req, res)
-{
-    try
-    {
+function buscarIncidencias(req, res) {
+    try {
         //obtener el id q venga de la url y parseInt para convertirlo a numero
         const id = parseInt(req.params.id);
 
         //find() para buscar la incidencia uno por uno dentro del arreglo
         const incidencia = incidencias.find(incidencia => incidencia.id === id);
 
-        if(!incidencia)
-            {
-                return res.status(404).json({
+        if (!incidencia) {
+            return res.status(404).json({
                 error: "No se encontro la incidencia"
             });
-            }
+        }
 
         return res.status(200).json(incidencia);
-    } catch(error)
-    {
+    } catch (error) {
         res.status(500).json({
-        error: "Ocurrio un error al buscar la incidencia"
-    });
+            error: "Ocurrio un error al buscar la incidencia"
+        });
+    }
+}
+
+function cambiarEstadoIncidencia(req, res) {
+    try {
+        //obtener el id q venga de la url y parseInt para convertirlo a numero
+        const id = parseInt(req.params.id);
+        const { estado } = req.body;
+
+        if (!incidencia) {
+            return res.status(404).json({
+                error: "No se encontro la incidencia"
+            });
+        }
+        if (!estado || estado.trim() === "") {
+            return res.status(400).json({
+                error: "Porfavor llenar el estado"
+            });
+        }
+        const estadoNormalizado = estado.trim().toLowerCase();
+        switch (estadoNormalizado) {
+            case "pendiente":
+                incidencia.estado = "pendiente";
+                break;
+            case "procesado":
+                incidencia.estado = "en proceso";
+                break;
+            case "finalizado":
+                incidencia.estado = "resuelta";
+                break;
+            case "cancelada":
+                incidencia.estado = "cancelada";
+                break;
+            default:
+                return res.status(400).json({
+                    error: "El estado solo puede ser pendiente, en proceso, resuelta o cancelada."
+                });
+        }
+        return res.status(200).json({
+            mensaje: "Se cambio el estado de la incidencia",
+            incidencia: incidencia
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            error: "Ocurrio un error al cambiar el estado de la incidencia"
+        });
     }
 }
 
@@ -98,5 +131,6 @@ module.exports =
 {
     registrarIncidencia,
     listarIncidencias,
-    buscarIncidencias
+    buscarIncidencias,
+    cambiarEstadoIncidencia
 };
