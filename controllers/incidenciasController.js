@@ -154,10 +154,11 @@ function cambiarEstadoIncidencia(req, res) {
     }
 }
 
-module.exports =
-{
-    registrarIncidencia,
-    listarIncidencias,
-    buscarIncidencias,
-    cambiarEstadoIncidencia
+module.exports = 
+{ 
+    registrarIncidencia, 
+    listarIncidencias, 
+    buscarIncidencias, 
+    cambiarEstadoIncidencia,
+    eliminarIncidencia
 };
