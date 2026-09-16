@@ -158,7 +158,6 @@ function obtenerEstadisticas(req, res) {
         const estadisticas = incidencias.reduce((acc, incidencia) => {
             acc.totalIncidencias++;
 
-            // Mapeo dinamico de los estados almacenados
             if (incidencia.estado === "pendiente") acc.pendientes++;
             else if (incidencia.estado === "en proceso") acc.enProceso++;
             else if (incidencia.estado === "resuelta") acc.resueltas++;
@@ -181,11 +180,11 @@ function obtenerEstadisticas(req, res) {
     }
 }
 
-module.exports = 
-{ 
+module.exports = { 
     registrarIncidencia, 
     listarIncidencias, 
     buscarIncidencias, 
     cambiarEstadoIncidencia,
-    eliminarIncidencia
+    eliminarIncidencia,
+    obtenerEstadisticas 
 };
