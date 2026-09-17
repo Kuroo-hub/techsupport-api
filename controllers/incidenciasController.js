@@ -72,6 +72,10 @@ function buscarIncidencia(req, res)
 {
     try
     {
+        if(incidencias.length === 0)
+            {
+                return res.status(200).json({mensaje: "No hay incidencias registradas"});
+            }
         const {id} = req.params;
 
         const incidenciaEncontrada = incidencias.find(
@@ -94,6 +98,10 @@ function cambiarEstado(req, res)
 {
     try
     {
+        if(incidencias.length === 0)
+            {
+                return res.status(200).json({mensaje: "No hay incidencias registradas"});
+            }
         const {id} = req.params;
         const {estado} = req.body;
 
@@ -132,7 +140,7 @@ function cambiarEstado(req, res)
         });
     }catch(error)
     {
-        res.status(500).json({error: "Problemas con el servidor"});
+        res.status(500).json({error: "Problemas con el cambio de estado"});
     }
 }
 
@@ -140,6 +148,10 @@ function eliminarIncidencia(req, res)
 {
     try
     {
+        if(incidencias.length === 0)
+            {
+                return res.status(200).json({mensaje: "No hay incidencias registradas"});
+            }
         const {id} = req.params;
 
         const indiceIncidencia = incidencias.findIndex(
@@ -165,11 +177,103 @@ function eliminarIncidencia(req, res)
     }
 }
 
+function obtenerEstadisticas(req, res)
+{
+    try
+    {
+        if(incidencias.length === 0)
+            {
+                return res.status(200).json({mensaje: "No hay incidencias registradas"});
+            }
+        const estadisticas = incidencias.reduce((acumulador, incidencia) =>
+            {
+                acumulador.totalIncidencias++;
+
+                switch (incidencia.estado.toLowerCase()) {
+                    case "pendiente":
+                        acumulador.pendientes++;
+                        break;
+                    case "en proceso": 
+                        acumulador.enProceso++;
+                        break;
+                    case "resuelta":
+                        acumulador.resueltas++;
+                        break;
+                    case "cancelada":
+                        acumulador.canceladas++;
+                        break;
+                }
+                return acumulador;
+            },{ 
+                totalIncidencias: 0,
+                pendientes: 0,
+                enProceso: 0,
+                resueltas: 0,
+                canceladas: 0
+            });
+        return res.status(200).json(estadisticas);
+    }catch(error)
+    {
+        res.status(500).json({
+            error: "Error al obtener las estadisticas"
+        });
+    }
+}
+
+function clasificarIncidencia(req, res)
+{
+    try
+    {
+        if(incidencias.length === 0)
+            {
+                return res.status(200).json({mensaje: "No hay incidencias registradas"});
+            }
+        const {id} = req.params;
+
+        const incidenciaEncontrada = incidencias.find(incidencia => incidencia.id === Number(id));
+
+        if(!incidenciaEncontrada)
+            {
+                return res.status(404).json({error: "Incidencia no encontrada."});
+            }
+        
+        let clasificacion = "";
+        const prioridadNormalizada = incidenciaEncontrada.prioridad.trim().toLowerCase(); 
+
+        switch(prioridadNormalizada)
+        {
+            case "alta":
+                clasificacion = "Critica";
+                break;
+            case "media":
+                clasificacion = "Importante";
+                break;
+            case "baja":
+                clasificacion = "Normal";
+                break;
+            default:
+                return res.status(404).json({error: "No se encontro la prioridad."});
+        }
+        return res.status(200).json({
+            mensaje: "Se clasifico correctamente",
+            id: incidenciaEncontrada.id,
+            clasificacion: clasificacion
+        });
+    }catch(error)
+    {
+        res.status(500).json({
+            error: "No se pudo clasificar incidencia"
+        });
+    }
+}
+
 module.exports =
 {
     registrarIncidencia,
     listarIncidencias,
     buscarIncidencia,
     cambiarEstado,
-    eliminarIncidencia
+    eliminarIncidencia,
+    obtenerEstadisticas,
+    clasificarIncidencia
 };
