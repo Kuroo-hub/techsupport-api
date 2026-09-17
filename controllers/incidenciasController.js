@@ -1,6 +1,9 @@
 const incidencias = require("../data/incidencias");
 const { validarPrioridad } = require("../utils/helpers");
 
+// Declaramos el contador global fuera de la funcion para llevar el control unico de los IDs
+let idContador = 0;
+
 // Registro de las incidencias
 function registrarIncidencia(req, res) {
     try {
@@ -18,13 +21,14 @@ function registrarIncidencia(req, res) {
 
         // Validacion y Normalizacion de la prioridad
         if (!validarPrioridad(prioridad)) {
-            return res.status(400).json({ error: "La prioridad solo puede ser Alta, Media o Baja." })
+            return res.status(400).json({ error: "La prioridad solo puede ser Alta, Media o Baja." });
         }
 
+        // Incrementamos el contador para garantizar un ID unico e irrepetible
+        idContador++;
         // Registramos el nuevo objeto y le agregamos el id junto con el estado.
-        const nuevaIncidencia =
-        {
-            id: incidencias.length + 1,
+        const nuevaIncidencia = {
+            id: idContador,
             empleado: empleado.trim(),
             area: area.trim(),
             descripcion: descripcion.trim(),
@@ -38,9 +42,9 @@ function registrarIncidencia(req, res) {
         return res.status(201).json({
             mensaje: "Se registro correctamente la incidencia",
             incidencia: nuevaIncidencia
-        })
+        });
     } catch (error) {
-        res.status(500).json({ error: "Error al registrar la incidencia." });
+        return res.status(500).json({ error: "Error al registrar la incidencia." });
     }
 }
 
@@ -224,5 +228,5 @@ module.exports = {
     cambiarEstadoIncidencia,
     eliminarIncidencia,
     obtenerEstadisticas,
-    clasificarIncidencia // <-- Agregada
+    clasificarIncidencia 
 };
