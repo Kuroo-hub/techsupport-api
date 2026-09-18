@@ -29,11 +29,12 @@ function registrarIncidencia(req, res) {
         // Registramos el nuevo objeto y le agregamos el id junto con el estado.
         const nuevaIncidencia = {
             id: idContador,
-            empleado: empleado.trim(),
+            empleado: empleado.trim().toUpperCase(),
             area: area.trim(),
             descripcion: descripcion.trim(),
             prioridad: prioridad,
-            estado: "pendiente"
+            estado: "pendiente",
+            tamaño: empleado.trim().length
         };
 
         // Agregamos el objeto al arreglo
@@ -77,6 +78,43 @@ function buscarIncidencias(req, res) {
         }
 
         return res.status(200).json(incidencia);
+    } catch (error) {
+        res.status(500).json({
+            error: "Ocurrio un error al buscar la incidencia"
+        });
+    }
+}
+
+function buscarPorEstado(req, res) {
+    try {
+        //obtener el id q venga de la url y parseInt para convertirlo a numero
+        const estado = req.params.estado;
+        const incidenciaFiltrada = [];
+        //filter() para filtrar por estado
+        //const incidencia = incidencias.filter(incidencia => incidencia.estado.toLowerCase() === estado.toLowerCase());
+
+        for(const incidencia of incidencias)
+            {
+                if(estado.toLowerCase() === incidencia.estado.toLowerCase())
+                    {
+                        incidenciaFiltrada.push(incidencia)
+                    }
+            }
+        
+        if(incidenciaFiltrada.length === 0)
+            {
+                return res.status(404).json
+                ({
+                    error: "No se encontro ninguna incidencia."
+                });
+            }
+        // if (!incidencia) {
+        //     return res.status(404).json({
+        //         error: "No se encontro la incidencia"
+        //     });
+        // }
+
+        return res.status(200).json(incidenciaFiltrada);
     } catch (error) {
         res.status(500).json({
             error: "Ocurrio un error al buscar la incidencia"
@@ -228,5 +266,6 @@ module.exports = {
     cambiarEstadoIncidencia,
     eliminarIncidencia,
     obtenerEstadisticas,
-    clasificarIncidencia 
+    clasificarIncidencia,
+    buscarPorEstado
 };
