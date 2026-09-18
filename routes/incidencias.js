@@ -2,7 +2,14 @@ const express = require("express");
 const router = express.Router();
 
 //Importar funciones
-const { registrarIncidencia, listarIncidencias, buscarIncidencias, cambiarEstadoIncidencia, eliminarIncidencia,obtenerEstadisticas,clasificarIncidencia, buscarPorEstado} = require("../controllers/incidenciasController");
+const { registrarIncidencia, 
+    listarIncidencias, 
+    buscarIncidencias, 
+    cambiarEstadoIncidencia, 
+    eliminarIncidencia,
+    obtenerEstadisticas,
+    clasificarIncidencia, 
+    buscarPorEstado} = require("../controllers/incidenciasController");
 
 // funcion registrar incidencias
 router.post("/", registrarIncidencia);
